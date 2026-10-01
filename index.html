@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>璧時尚｜皮膚生理與病態學臨床應用 課後測驗</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"Noto Sans TC",sans-serif;background:#F5F5F3;color:#1A1A1A;min-height:100vh}
+.wrap{max-width:680px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.header{background:#fff;border:0.5px solid #E0DED8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+.timer-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.timer{font-size:22px;font-weight:500;color:#1A1A1A;font-variant-numeric:tabular-nums}
+.timer.warn{color:#E24B4A}
+.progress-bar{height:4px;background:#E0DED8;border-radius:2px;margin-top:8px}
+.progress-fill{height:4px;background:#185FA5;border-radius:2px;transition:width 0.3s}
+.progress-fill.warn{background:#E24B4A}
+.q-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.q-dot{width:30px;height:30px;border-radius:50%;border:0.5px solid #C8C6C0;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6B6A66;background:#fff;transition:all 0.15s}
+.q-dot.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.q-dot.answered{background:#EAF3DE;color:#3B6D11;border-color:#639922}
+.q-dot.answered.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.card{background:#fff;border:0.5px solid #E0DED8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+.q-label{font-size:11px;font-weight:500;color:#185FA5;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.q-score{font-size:11px;font-weight:500;color:#888780;margin-bottom:6px;float:right}
+.q-text{font-size:15px;font-weight:500;color:#1A1A1A;line-height:1.55;margin-bottom:1rem;clear:both}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:0.5px solid #E0DED8;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;background:#fff}
+.opt:hover{border-color:#378ADD;background:#F5F9FE}
+.opt.selected{border-color:#378ADD;background:#E6F1FB}
+.opt.correct{border-color:#639922;background:#EAF3DE}
+.opt.wrong{border-color:#E24B4A;background:#FCEBEB}
+.opt-circle{width:22px;height:22px;border-radius:50%;border:1.5px solid #C8C6C0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#6B6A66;margin-top:1px}
+.opt.selected .opt-circle{border-color:#378ADD;color:#185FA5;background:#fff}
+.opt.correct .opt-circle{border-color:#639922;color:#3B6D11;background:#fff}
+.opt.wrong .opt-circle{border-color:#E24B4A;color:#A32D2D;background:#fff}
+.opt-text{font-size:14px;color:#1A1A1A;line-height:1.5}
+.multi-hint{font-size:12px;color:#888780;margin-bottom:10px}
+.btn-row{display:flex;gap:8px;margin-top:1rem}
+button.primary{flex:1;padding:11px;border-radius:8px;border:0.5px solid #378ADD;background:#185FA5;color:#fff;font-size:14px;font-weight:500;cursor:pointer;transition:opacity 0.15s}
+button.secondary{flex:1;padding:11px;border-radius:8px;border:0.5px solid #C8C6C0;background:#fff;color:#1A1A1A;font-size:14px;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}
+.field-label{font-size:12px;color:#6B6A66;margin-bottom:5px;font-weight:500}
+.field-input{width:100%;padding:10px 12px;border:0.5px solid #C8C6C0;border-radius:8px;font-size:14px;color:#1A1A1A;background:#fff;margin-bottom:14px;outline:none}
+.field-input:focus{border-color:#378ADD}
+.info-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.info-item{background:#F5F5F3;border-radius:8px;padding:12px;text-align:center}
+.info-val{font-size:20px;font-weight:500;color:#1A1A1A}
+.info-lab{font-size:11px;color:#888780;margin-top:2px}
+.start-title{font-size:20px;font-weight:500;margin-bottom:4px;color:#1A1A1A}
+.start-sub{font-size:13px;color:#888780;margin-bottom:1.25rem;line-height:1.6}
+.result-card{background:#fff;border:0.5px solid #E0DED8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:8px;text-align:left}
+.result-q{font-size:13px;font-weight:500;color:#1A1A1A;margin-bottom:4px}
+.result-ans{font-size:12px;color:#888780;margin-bottom:4px}
+.result-status{font-size:12px}
+.r-correct{color:#3B6D11}
+.r-partial{color:#B7791F}
+.r-wrong{color:#A32D2D}
+.score-circle{width:110px;height:110px;border-radius:50%;border:3px solid #185FA5;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1rem}
+.score-num{font-size:28px;font-weight:500;color:#185FA5}
+.score-sub{font-size:12px;color:#888780}
+.meta-bar{font-size:12px;color:#888780;margin-bottom:1.25rem}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:500;margin-bottom:1.25rem}
+.pass-badge.pass{background:#EAF3DE;color:#3B6D11}
+.pass-badge.fail{background:#FCEBEB;color:#A32D2D}
+.score-breakdown{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.5rem}
+.breakdown-item{background:#F5F5F3;border-radius:8px;padding:10px;text-align:center}
+.breakdown-val{font-size:16px;font-weight:500;color:#1A1A1A}
+.breakdown-lab{font-size:11px;color:#888780;margin-top:2px}
+.part-label{font-size:12px;font-weight:500;color:#888780;margin:1rem 0 0.5rem;padding-left:4px}
+.correct-ans-box{margin-top:8px;padding:8px 10px;background:#F5F9FE;border-radius:6px;border:0.5px solid #B5D4F4;font-size:12px;color:#185FA5;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="app"></div>
+</div>
+
+<script>
+const TOTAL_SECS = 20 * 60;
+const PASS_SCORE = 80;
+
+const questions = [
+  {
+    id:1, part:"單選題", type:"single", points:5,
+    text:"皮膚是人體最大的器官，其總面積與占體重的比例約為何？",
+    opts:["約 1–1.2 平方公尺，占體重約 8%", "約 1.5–2 平方公尺，占體重約 16%", "約 2.5–3 平方公尺，占體重約 20%", "約 1.5–2 平方公尺，占體重約 30%"],
+    answer:[1],
+    explanation:"皮膚總面積 1.5–2 平方公尺，占體重約 16%。"
+  },
+  {
+    id:2, part:"單選題", type:"single", points:5,
+    text:"表皮層由外而內的五層結構，正確順序為何？",
+    opts:["角質層 → 顆粒層 → 透明層 → 有棘層 → 基底層", "基底層 → 有棘層 → 顆粒層 → 透明層 → 角質層", "角質層 → 透明層 → 顆粒層 → 有棘層 → 基底層", "角質層 → 有棘層 → 透明層 → 顆粒層 → 基底層"],
+    answer:[2],
+    explanation:"表皮五層由外而內為角質、透明、顆粒、有棘、基底層。"
+  },
+  {
+    id:3, part:"單選題", type:"single", points:5,
+    text:"表皮細胞從生成到脫落的新陳代謝週期約為多久？",
+    opts:["約 28 天", "約 7 天", "約 60 天", "約 90 天"],
+    answer:[0],
+    explanation:"表皮從生成到脫落約 28 天一個循環。"
+  },
+  {
+    id:4, part:"單選題", type:"single", points:5,
+    text:"講義將角質層比喻為「磚牆結構」，其中扮演「水泥」角色的是什麼？",
+    opts:["角質細胞", "黑色素", "彈力纖維", "神經醯胺與脂肪酸組成的脂質"],
+    answer:[3],
+    explanation:"角質細胞是「磚塊」，神經醯胺與脂肪酸組成的脂質是「水泥」。"
+  },
+  {
+    id:5, part:"單選題", type:"single", points:5,
+    text:"負責製造黑色素、被比喻為「生產工廠」的黑色素細胞，位於哪一層？",
+    opts:["基底層", "角質層", "顆粒層", "真皮層"],
+    answer:[0],
+    explanation:"黑色素細胞位於表皮最底部的基底層，也是皮秒雷射對準的色素靶點。"
+  },
+  {
+    id:6, part:"單選題", type:"single", points:5,
+    text:"健康皮膚表面的酸鹼值範圍為何？",
+    opts:["pH 7.0，呈中性", "pH 8.0–8.5，呈弱鹼性", "pH 4.5–5.5，呈弱酸性", "pH 2.0–3.0，呈強酸性"],
+    answer:[2],
+    explanation:"健康皮膚呈弱酸性，pH 4.5–5.5。"
+  },
+  {
+    id:7, part:"單選題", type:"single", points:5,
+    text:"NMF（天然保濕因子）的主要功能是什麼？",
+    opts:["填補角質間隙，像水泥般黏緊細胞", "抓取環境中的水分子，維持肌膚柔軟彈性", "製造黑色素，保護皮膚免受紫外線傷害", "提供真皮層的結構支撐力"],
+    answer:[1],
+    explanation:"NMF 是「吸水磁鐵」，負責抓取水分子；(A) 描述的是神經醯胺。"
+  },
+  {
+    id:8, part:"單選題", type:"single", points:5,
+    text:"關於皮膚微生態，下列敘述何者正確？",
+    opts:["皮膚表面的菌越少越乾淨，越健康", "洗臉次數越多，越能預防敏感", "化妝品的使用方式不會影響微生態", "過度清潔會破壞菌叢平衡，容易引發泛紅、敏感甚至酒糟性皮膚炎"],
+    answer:[3],
+    explanation:"過度清潔會殺光保衛益菌，失衡後易泛紅、發癢、敏感或引發酒糟性皮膚炎。"
+  },
+  {
+    id:9, part:"單選題", type:"single", points:5,
+    text:"在真皮層的三大成分中，被比喻為「彈簧」、負責賦予肌膚回彈力的是？",
+    opts:["膠原蛋白", "玻尿酸", "彈力纖維", "神經醯胺"],
+    answer:[2],
+    explanation:"膠原蛋白是「鋼筋」，彈力纖維是「彈簧」，玻尿酸是「水泥」。"
+  },
+  {
+    id:10, part:"單選題", type:"single", points:5,
+    text:"顧客抱怨蘋果肌下垂。講義中被比喻為「隱形網袋」的 SMAS 筋膜層，其位置與對應療程為何？",
+    opts:["位於表皮基底層；以皮秒雷射處理", "位於真皮深層與皮下組織之間；以海芙音波等 HIFU 處理", "位於肌肉層；以肉毒桿菌素處理", "位於角質層；以果酸換膚處理"],
+    answer:[1],
+    explanation:"SMAS 位於真皮深層與皮下組織之間，以海芙音波、美超音波等 HIFU 熱縮提拉。"
+  },
+  {
+    id:11, part:"單選題", type:"single", points:5,
+    text:"顧客想改善抬頭紋與魚尾紋（動態紋），應作用於哪一層、使用哪種療程？",
+    opts:["肌肉層；肉毒桿菌素", "表皮層；果酸換膚", "SMAS 筋膜層；音波拉提", "真皮層；玻尿酸填充"],
+    answer:[0],
+    explanation:"動態紋來自肌肉反覆收縮，肉毒桿菌素作用於肌肉層使其放鬆。"
+  },
+  {
+    id:12, part:"單選題", type:"single", points:5,
+    text:"造成約 80% 外因性老化的「頭號殺手」是什麼？",
+    opts:["糖化反應", "氧化壓力", "表情肌肉收縮", "紫外線造成的光老化"],
+    answer:[3],
+    explanation:"紫外線造成約 80% 的外因性老化，防曬是抗老第一步。"
+  },
+  {
+    id:13, part:"單選題", type:"single", points:5,
+    text:"講義中提到甜食會讓膠原蛋白從「有彈性的果凍變成枯黃易碎的乾草」，這指的是哪種老化機制？",
+    opts:["自由基像金屬生鏽般攻擊細胞", "皮脂膜受損導致水分蒸發", "糖化終產物使膠原蛋白「焦糖化」", "黑色素細胞過度開工"],
+    answer:[2],
+    explanation:"甜食產生糖化終產物，使膠原蛋白焦糖化而變得枯黃易碎。"
+  },
+  {
+    id:14, part:"單選題", type:"single", points:5,
+    text:"依老化「鬆、垂、凹、皺、變、暗」六字訣，下列哪一組現象與療程的配對正確？",
+    opts:["凹 → 玻尿酸填充", "皺 → 雷射亮白", "鬆與垂 → 肉毒桿菌素", "變與暗 → 音波拉提"],
+    answer:[0],
+    explanation:"鬆垂 → 音波、凹 → 玻尿酸、皺 → 肉毒、變暗 → 雷射亮白。"
+  },
+  {
+    id:15, part:"單選題", type:"single", points:5,
+    text:"關於 Fitzpatrick 膚色分型，下列敘述何者正確？",
+    opts:["台灣人多數屬於 I 型與 II 型", "台灣人多數屬於 III 型與 IV 型；膚色越深，雷射吸收能量越多，反黑風險越高", "膚色越深，黑色素越不活躍，反黑風險越低", "此分型只影響保養品選擇，與雷射安全性無關"],
+    answer:[1],
+    explanation:"台灣人多屬 III、IV 型；膚色越深，雷射吸收能量越多，反黑風險越高。"
+  },
+  {
+    id:16, part:"單選題", type:"single", points:5,
+    text:"痤瘡的四階段演進，正確順序為何？",
+    opts:["丘疹 → 微粉刺 → 膿皰 → 結節囊腫", "微粉刺 → 膿皰 → 丘疹 → 結節囊腫", "結節囊腫 → 膿皰 → 丘疹 → 微粉刺", "微粉刺 → 丘疹 → 膿皰 → 結節囊腫"],
+    answer:[3],
+    explanation:"微粉刺 → 丘疹 → 膿皰 → 結節囊腫。"
+  },
+  {
+    id:17, part:"單選題", type:"single", points:5,
+    text:"關於肝斑（情緒斑），下列敘述何者正確？",
+    opts:["屬於表淺斑，一次皮秒雷射即可完全清除", "屬於混合斑（全層），須採溫和雷射並配合藥物治療與作息調整", "屬於深層斑，與太田母斑同一類別", "不屬於色素性問題"],
+    answer:[1],
+    explanation:"肝斑為混合斑（全層），最需耐心，須溫和雷射搭配藥物與作息調整。"
+  },
+  {
+    id:18, part:"單選題", type:"single", points:5,
+    text:"黑色素生成的路徑，正確順序為何？",
+    opts:["紫外線 → 酪胺酸酶 → 黑色素 → 角質轉移", "酪胺酸酶 → 紫外線 → 角質轉移 → 黑色素", "黑色素 → 酪胺酸酶 → 紫外線 → 角質轉移", "紫外線 → 黑色素 → 酪胺酸酶 → 角質轉移"],
+    answer:[0],
+    explanation:"紫外線 → 酪胺酸酶 → 黑色素 → 角質轉移。"
+  },
+  {
+    id:19, part:"單選題", type:"single", points:5,
+    text:"關於電波拉皮與音波拉提的差異，下列敘述何者正確？",
+    opts:["電波為線狀加熱，直接作用於 SMAS 筋膜層", "音波為面狀加熱，像電熨斗般燙平細紋", "電波為面狀加熱，主要緊緻表皮與真皮層；音波為線狀聚焦加熱，作用於 SMAS 筋膜層", "兩者作用層次完全相同，只是品牌不同"],
+    answer:[2],
+    explanation:"電波為面狀加熱（改善細紋），音波為線狀聚焦加熱作用於 SMAS（改善垂臉）。"
+  },
+  {
+    id:20, part:"單選題", type:"single", points:5,
+    text:"下列哪一項做法「不符合」療程安全與合規衛教原則？",
+    opts:["使用衛生福利部核准的合法藥物與器材", "原廠藥盒與針劑在顧客面前即時拆封", "術後叮嚀加強防曬與高度保濕", "向顧客保證「一針見效、效果永久」"],
+    answer:[3],
+    explanation:"衛教禁止使用「保證永久、一針見效」等誇大詞彙。"
+  }
+];
+
+function todayStr(){
+  const d=new Date();
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+
+let state={
+  phase:"start", name:"", branch:"", position:"", positionOther:"", date:todayStr(), formError:{},
+  current:0, answers:Array(questions.length).fill(null),
+  submitted:Array(questions.length).fill(false),
+  timeLeft:TOTAL_SECS, timerInterval:null, finished:false
+};
+
+function fmt(s){const m=Math.floor(s/60),sec=s%60;return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;}
+
+function startTimer(){
+  state.timerInterval=setInterval(()=>{
+    if(state.finished)return;
+    state.timeLeft--;
+    if(state.timeLeft<=0){clearInterval(state.timerInterval);state.timeLeft=0;finishQuiz();}
+    renderHeader();
+  },1000);
+}
+
+function finishQuiz(){state.finished=true;state.phase="result";clearInterval(state.timerInterval);render();}
+
+// 計算單題實際得分：單選題維持「全對才給分」；多選題改為「選對一個算一個」的比例給分，
+// 每勾對一個正確選項可得 q.points/正確選項數 的分數，勾錯的選項不給分也不扣分。
+function qPoints(i){
+  const q=questions[i];
+  const ans=state.answers[i];
+  if(!ans||ans.length===0)return 0;
+  if(q.type!=="multi"){
+    return isQCorrect(i)?q.points:0;
+  }
+  const correctSelected=ans.filter(a=>q.answer.includes(a)).length;
+  const raw=q.points*correctSelected/q.answer.length;
+  return Math.round(raw*100)/100; // 保留至多兩位小數
+}
+
+function calcScore(){
+  let total=0;
+  questions.forEach((q,i)=>{total+=qPoints(i);});
+  return Math.round(total*100)/100;
+}
+
+function isQAnswered(i){
+  const ans=state.answers[i];
+  if(!ans)return false;
+  return ans.length>0;
+}
+
+function isQCorrect(i){
+  const ans=state.answers[i];
+  const q=questions[i];
+  if(!ans||ans.length===0)return false;
+  return q.answer.slice().sort().join(",")===ans.slice().sort().join(",");
+}
+
+function renderHeader(){
+  const h=document.getElementById("quiz-header");
+  if(!h)return;
+  const pct=(state.timeLeft/TOTAL_SECS)*100;
+  const warn=state.timeLeft<120;
+  h.querySelector(".timer").textContent=fmt(state.timeLeft);
+  h.querySelector(".timer").className="timer"+(warn?" warn":"");
+  h.querySelector(".progress-fill").style.width=pct+"%";
+  h.querySelector(".progress-fill").className="progress-fill"+(warn?" warn":"");
+}
+
+function render(){
+  const app=document.getElementById("app");
+  if(state.phase==="start"){app.innerHTML=renderStart();return;}
+  if(state.phase==="result"){app.innerHTML=renderResult();return;}
+  app.innerHTML=renderQuiz();
+}
+
+function renderStart(){
+  const isResume=state.resuming;
+  const e=state.formError||{};
+  function errMsg(f){return e[f]?'<div style="font-size:12px;color:#A32D2D;margin-top:-10px;margin-bottom:10px;">\u26a0 '+e[f]+'</div>':""}
+  function hErr(f){return e[f]?"border-color:#E24B4A;":""}
+  return '<div class="card">'
+    +'<div class="start-title">皮膚生理與病態學臨床應用</div>'
+    +'<div class="start-sub">'+(isResume?"\u8003\u8a66\u9032\u884c\u4e2d\uff5c\u8acb\u78ba\u8a8d\u6216\u4fee\u6539\u57fa\u672c\u8cc7\u6599\u5f8c\u7e7c\u7e8c\u4f5c\u7b54":"璧時尚 2026 年度實務課程 課後測驗｜\u8acb\u586b\u5beb\u57fa\u672c\u8cc7\u6599\u5f8c\u958b\u59cb\u4f5c\u7b54")+'</div>'
+    +'<div class="field-label">\u59d3\u540d <span style="color:#E24B4A">*</span></div>'
+    +'<input class="field-input" id="inp-name" type="text" placeholder="\u8acb\u8f38\u5165\u59d3\u540d" value="'+state.name+'" style="'+hErr('name')+'">'
+    +errMsg('name')
+    +'<div class="field-label">\u5206\u9662 <span style="color:#E24B4A">*</span></div>'
+    +'<select class="field-input" id="inp-branch" style="cursor:pointer;'+hErr('branch')+'">'
+    +'<option value=""'+(state.branch?"":" selected")+'>\u8acb\u9078\u64c7\u5206\u9662</option>'
+    +'<option value="\u53f0\u5317"'+(state.branch==="\u53f0\u5317"?" selected":"")+'>\u53f0\u5317</option>'
+    +'<option value="\u53f0\u4e2d"'+(state.branch==="\u53f0\u4e2d"?" selected":"")+'>\u53f0\u4e2d</option>'
+    +'<option value="\u9ad8\u96c4"'+(state.branch==="\u9ad8\u96c4"?" selected":"")+'>\u9ad8\u96c4</option>'
+    +'</select>'
+    +errMsg('branch')
+    +'<div class="field-label">\u8077\u4f4d <span style="color:#E24B4A">*</span></div>'
+    +'<select class="field-input" id="inp-position" style="cursor:pointer;'+hErr('position')+'" onchange="toggleOtherPosition()">'
+    +'<option value=""'+(state.position?"":" selected")+'>\u8acb\u9078\u64c7\u8077\u4f4d</option>'
+    +'<option value="\u6ac3\u6aaf"'+(state.position==="\u6ac3\u6aaf"?" selected":"")+'>\u6ac3\u6aaf</option>'
+    +'<option value="\u54a8\u8a62\u5e2b"'+(state.position==="\u54a8\u8a62\u5e2b"?" selected":"")+'>\u54a8\u8a62\u5e2b</option>'
+    +'<option value="\u7f8e\u5bb9\u5e2b"'+(state.position==="\u7f8e\u5bb9\u5e2b"?" selected":"")+'>\u7f8e\u5bb9\u5e2b</option>'
+    +'<option value="\u8b77\u7406\u5e2b"'+(state.position==="\u8b77\u7406\u5e2b"?" selected":"")+'>\u8b77\u7406\u5e2b</option>'
+    +'<option value="\u5176\u4ed6"'+(state.position==="\u5176\u4ed6"?" selected":"")+'>\u5176\u4ed6</option>'
+    +'</select>'
+    +errMsg('position')
+    +'<div id="other-position-wrap" style="display:'+(state.position==="\u5176\u4ed6"?"block":"none")+';margin-top:-8px;">'
+    +'<input class="field-input" id="inp-position-other" type="text" placeholder="\u8acb\u586b\u5beb\u4f60\u7684\u8077\u4f4d" value="'+state.positionOther+'" style="'+hErr('positionOther')+'">'
+    +errMsg('positionOther')
+    +'</div>'
+    +'<div class="field-label">\u65e5\u671f <span style="color:#E24B4A">*</span></div>'
+    +'<input class="field-input" id="inp-date" type="date" value="'+state.date.replace(/\//g,'-')+'" style="cursor:pointer;'+hErr('date')+'">'
+    +errMsg('date')
+    +(isResume
+      ?'<div style="background:#FAEEDA;border-radius:8px;padding:10px 14px;margin-bottom:1.25rem;font-size:13px;color:#854F0B;">'
+       +'\u23f1 \u8a08\u6642\u5df2\u66ab\u505c\uff0c\u5269\u9918\u6642\u9593 <strong>'+fmt(state.timeLeft)+'</strong>\uff0c\u5132\u5b58\u5f8c\u7e7c\u7e8c\u5012\u6578'
+       +'</div>'
+       +'<div class="btn-row">'
+       +'<button class="secondary" onclick="cancelEditInfo()">\u53d6\u6d88\uff0c\u7e7c\u7e8c\u4f5c\u7b54</button>'
+       +'<button class="primary" onclick="saveInfoAndResume()">\u5132\u5b58\u4e26\u7e7c\u7e8c\u4f5c\u7b54</button>'
+       +'</div>'
+      :'<div class="info-row">'
+       +'<div class="info-item"><div class="info-val">20</div><div class="info-lab">\u984c\u76ee\u6578\u91cf</div></div>'
+       +'<div class="info-item"><div class="info-val">100</div><div class="info-lab">\u7e3d\u5206</div></div>'
+       +'<div class="info-item"><div class="info-val">20:00</div><div class="info-lab">\u9650\u5236\u6642\u9593</div></div>'
+       +'</div>'
+       +'<div style="background:#EAF3DE;border-radius:8px;padding:10px 14px;margin-bottom:1.25rem;font-size:13px;color:#3B6D11;">'
+       +'\u2713 \u5408\u683c\u6a19\u6e96\uff1a<strong>80 \u5206</strong>\u4ee5\u4e0a\uff08\u542b\uff09\u5373\u70ba\u901a\u904e'
+       +'</div>'
+       +'<div style="font-size:12px;color:#888780;margin-bottom:1.25rem;line-height:1.8;">'
+       +'<strong style="color:#1A1A1A;">\u914d\u5206\u8aaa\u660e</strong><br>'
+       +'單選題 20 題（Q1–Q20），每題 5 分，共 100 分'
+       +'</div>'
+       +'<button class="primary" onclick="startQuiz()">\u958b\u59cb\u8003\u8a66</button>'
+    )
+    +'</div>';
+}
+
+function collectFormFields(){
+  const name=(document.getElementById("inp-name")||{}).value?.trim()||"";
+  const branch=(document.getElementById("inp-branch")||{}).value||"";
+  const positionSel=(document.getElementById("inp-position")||{}).value||"";
+  const positionOther=(document.getElementById("inp-position-other")||{}).value?.trim()||"";
+  const dateVal=(document.getElementById("inp-date")||{}).value||"";
+  return{name,branch,positionSel,positionOther,dateVal};
+}
+
+function toggleOtherPosition(){
+  const sel=document.getElementById("inp-position");
+  const wrap=document.getElementById("other-position-wrap");
+  if(wrap)wrap.style.display=(sel&&sel.value==="\u5176\u4ed6")?"block":"none";
+}
+
+function validateForm(name,branch,positionSel,positionOther,dateVal){
+  const err={};
+  if(!name)err.name="\u8acb\u586b\u5beb\u59d3\u540d";
+  if(!branch)err.branch="\u8acb\u9078\u64c7\u5206\u9662";
+  if(!positionSel)err.position="\u8acb\u9078\u64c7\u8077\u4f4d";
+  if(positionSel==="\u5176\u4ed6"&&!positionOther)err.positionOther="\u8acb\u586b\u5beb\u4f60\u7684\u8077\u4f4d";
+  if(!dateVal)err.date="\u8acb\u9078\u64c7\u65e5\u671f";
+  return err;
+}
+
+function startQuiz(){
+  const{name,branch,positionSel,positionOther,dateVal}=collectFormFields();
+  const err=validateForm(name,branch,positionSel,positionOther,dateVal);
+  if(Object.keys(err).length){state.formError=err;render();return;}
+  state.name=name;
+  state.branch=branch;
+  state.position=positionSel;
+  state.positionOther=positionOther;
+  if(dateVal){const p=dateVal.split("-");state.date=`${p[0]}/${p[1]}/${p[2]}`;}
+  state.formError={};
+  state.resuming=false;
+  state.phase="quiz";
+  render();
+  startTimer();
+}
+
+function editInfo(){
+  clearInterval(state.timerInterval);
+  state.timerInterval=null;
+  state.resuming=true;
+  state.phase="start";
+  render();
+}
+
+function saveInfoAndResume(){
+  const{name,branch,positionSel,positionOther,dateVal}=collectFormFields();
+  const err=validateForm(name,branch,positionSel,positionOther,dateVal);
+  if(Object.keys(err).length){state.formError=err;render();return;}
+  state.name=name;
+  state.branch=branch;
+  state.position=positionSel;
+  state.positionOther=positionOther;
+  if(dateVal){const p=dateVal.split("-");state.date=`${p[0]}/${p[1]}/${p[2]}`;}
+  state.formError={};
+  state.resuming=false;
+  state.phase="quiz";
+  render();
+  startTimer();
+}
+
+function cancelEditInfo(){
+  state.formError={};
+  state.resuming=false;
+  state.phase="quiz";
+  render();
+  startTimer();
+}
+
+function renderQuiz(){
+  const q=questions[state.current];
+  const i=state.current;
+  const dots=questions.map((_,idx)=>{
+    let cls="q-dot";
+    if(idx===i)cls+=" active";
+    else if(isQAnswered(idx))cls+=" answered";
+    return `<div class="${cls}" onclick="goQ(${idx})">${idx+1}</div>`;
+  }).join("");
+
+  const sel=state.answers[i]||[];
+  const done=state.submitted[i];
+
+  let qBody="";
+  if(q.type==="single"||q.type==="multi"){
+    qBody=q.opts.map((o,j)=>{
+      let cls="opt";
+      if(sel.includes(j))cls+=" selected";
+      return `<div class="${cls}" onclick="toggleOpt(${j})">
+        <div class="opt-circle">${String.fromCharCode(65+j)}</div>
+        <div class="opt-text">${o}</div>
+      </div>`;
+    }).join("");
+    if(q.type==="multi")qBody=`<div class="multi-hint">可複選，請選出所有正確項目</div>`+qBody;
+  }
+
+
+
+  const answered=isQAnswered(i);
+
+  return `<div id="quiz-header" class="header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:14px;font-weight:500;color:#1A1A1A">${state.name||"考生"}${state.branch?" · "+state.branch:""}</div>
+          <button onclick="editInfo()" style="font-size:11px;padding:2px 8px;border-radius:6px;border:0.5px solid #C8C6C0;background:#fff;color:#6B6A66;cursor:pointer;font-weight:400;">編輯資料</button>
+        </div>
+        <div style="font-size:12px;color:#888780;margin-top:2px">${state.date} ｜ 第 ${i+1} 題 / 共 ${questions.length} 題</div>
+      </div>
+      <div style="text-align:right">
+        <div class="timer">${fmt(state.timeLeft)}</div>
+        <div style="font-size:11px;color:#888780">剩餘時間</div>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${(state.timeLeft/TOTAL_SECS)*100}%"></div></div>
+  </div>
+  <div class="q-nav">${dots}</div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div class="q-label" style="margin-bottom:0">${q.part} · 第 ${i+1} 題</div>
+      <div class="q-score">${q.points} 分</div>
+    </div>
+    <div class="q-text">${q.text}</div>
+    ${qBody}
+    <div class="btn-row">
+      <button class="secondary" onclick="goQ(${i-1})" ${i===0?"disabled":""}>上一題</button>
+      ${!done
+        ? `<button class="primary" onclick="submitQ()" ${!answered?"disabled":""}>確認答案</button>`
+        : `<button class="secondary" onclick="changeAnswer()" style="border-color:#378ADD;color:#185FA5;">修改答案</button>`
+      }
+      ${i<questions.length-1?`<button class="primary" onclick="goQ(${i+1})">下一題</button>`:`<button class="primary" onclick="finishQuiz()">交卷</button>`}
+    </div>
+  </div>`;
+}
+
+function renderResult(){
+  const score=calcScore();
+  const passed=score>=PASS_SCORE;
+
+  const correctCount=questions.filter((q,i)=>isQCorrect(i)).length;
+
+  // 通過時：顯示正確答案與解析
+  function renderPartPass(qs,startIdx,label){
+    return `<div class="part-label">${label}</div>`+qs.map((q,j)=>{
+      const idx=startIdx+j;
+      const earned=qPoints(idx);
+      const full=q.points;
+      const ans=state.answers[idx];
+      let ansText="（未作答）";
+      if(ans&&ans.length>0){
+        ansText="你的答案："+ans.map(a=>String.fromCharCode(65+a)).join("、");
+      }
+      const corrText="正確答案："+q.answer.map(a=>String.fromCharCode(65+a)).join("、");
+      let statusClass,statusText;
+      if(earned>=full&&earned>0){statusClass="r-correct";statusText="✓ 答對（+"+full+" 分）";}
+      else if(earned>0){statusClass="r-partial";statusText="◐ 部分正確（+"+earned+" 分）";}
+      else{statusClass="r-wrong";statusText="✗ 答錯（0 分）";}
+      return `<div class="result-card">
+        <div class="result-q">Q${idx+1}. ${q.text}</div>
+        <div class="result-ans">${ansText}　${corrText}</div>
+        ${earned<full?`<div style="font-size:12px;color:#888780;margin-bottom:4px">${q.explanation}</div>`:""}
+        <div class="result-status ${statusClass}">${statusText}</div>
+      </div>`;
+    }).join("");
+  }
+
+  // 未通過時：只顯示考生自己的答案，不顯示正確答案與解析
+  function renderPartFail(qs,startIdx,label){
+    return `<div class="part-label">${label}</div>`+qs.map((q,j)=>{
+      const idx=startIdx+j;
+      const earned=qPoints(idx);
+      const full=q.points;
+      const ans=state.answers[idx];
+      let ansText="（未作答）";
+      if(ans&&ans.length>0){
+        ansText="你的答案："+ans.map(a=>String.fromCharCode(65+a)).join("、");
+      }
+      let statusClass,statusText;
+      if(earned>=full&&earned>0){statusClass="r-correct";statusText="✓ 答對（+"+full+" 分）";}
+      else if(earned>0){statusClass="r-partial";statusText="◐ 部分正確（+"+earned+" 分）";}
+      else{statusClass="r-wrong";statusText="✗ 答錯（0 分）";}
+      return `<div class="result-card">
+        <div class="result-q">Q${idx+1}. ${q.text}</div>
+        <div class="result-ans">${ansText}</div>
+        <div class="result-status ${statusClass}">${statusText}</div>
+      </div>`;
+    }).join("");
+  }
+
+  const scoreHeader = `<div style="text-align:center;padding:1rem 0">
+    <div style="font-size:17px;font-weight:500;margin-bottom:2px;color:#1A1A1A">考試結果</div>
+    <div class="meta-bar">${state.name} ｜ ${state.branch} ｜ ${state.position==='\u5176\u4ed6'?state.positionOther:state.position} ｜ ${state.date}</div>
+    <div class="score-circle">
+      <div class="score-num">${score}</div>
+      <div class="score-sub">/ 100 分</div>
+    </div>
+    <div><span class="pass-badge ${passed?"pass":"fail"}">${passed?"✓ 恭喜通過！":"✗ 未達合格標準"}</span></div>
+    <div style="font-size:13px;color:#888780;margin-bottom:1.25rem">${passed?"表現優秀，合格分數 80 分，繼續保持！":"合格分數為 80 分，建議再複習後重新作答。"}</div>
+    <div class="score-breakdown">
+      <div class="breakdown-item"><div class="breakdown-val">${correctCount} / ${questions.length}</div><div class="breakdown-lab">答對題數</div></div>
+      <div class="breakdown-item"><div class="breakdown-val">${questions.length-correctCount}</div><div class="breakdown-lab">答錯／未作答</div></div>
+    </div>
+  </div>`;
+
+  if(passed){
+    return scoreHeader
+      + renderPartPass(questions,0,"單選題（共 20 題）")
+      + `<div id="submit-area" style="margin-top:0.5rem">
+    <div style="background:#FAEEDA;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:13px;color:#854F0B;">
+      ⚠ 請務必點擊下方按鈕提交成績，否則成績將不會被記錄！
+    </div>
+    <button class="primary" id="submit-btn" style="width:100%;background:#3B6D11;border-color:#3B6D11;" onclick="submitScore()">📤 提交成績到系統</button>
+    <div id="submit-msg" style="margin-top:8px;font-size:13px;text-align:center;"></div>
+  </div>
+  <div id="retry-area" style="display:none;margin-top:0.5rem">
+    <button class="primary" style="width:100%" onclick="resetQuiz()">重新考試</button>
+  </div>`;
+  } else {
+    return scoreHeader
+      + renderPartFail(questions,0,"單選題（共 20 題）")
+      + `<div style="margin-top:0.5rem">
+    <button class="primary" style="width:100%;background:#E24B4A;border-color:#E24B4A;" onclick="resetQuiz()">🔄 重考</button>
+  </div>`;
+  }
+}
+
+function goQ(idx){if(idx<0||idx>=questions.length)return;state.current=idx;render();}
+
+function toggleOpt(j){
+  const i=state.current;
+  if(state.submitted[i])return;
+  const q=questions[i];
+  let ans=state.answers[i]||[];
+  if(q.type==="single")ans=[j];
+  else ans=ans.includes(j)?ans.filter(x=>x!==j):[...ans,j];
+  state.answers[i]=ans;
+  render();
+}
+
+function submitQ(){state.submitted[state.current]=true;render();}
+
+function changeAnswer(){state.submitted[state.current]=false;state.answers[state.current]=null;render();}
+
+
+function resetQuiz(){
+  clearInterval(state.timerInterval);
+  state={phase:"start",name:state.name,branch:state.branch,position:state.position,positionOther:state.positionOther,date:state.date,current:0,
+    answers:Array(questions.length).fill(null),submitted:Array(questions.length).fill(false),
+    timeLeft:TOTAL_SECS,timerInterval:null,finished:false,resuming:false,formError:{}};
+  render();
+}
+
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynbW_zsXH7a64ecCq-SsPTtmHw4tRa-H3Mg-5F_XzrbZFA6Jhg3IrqvtQzRAIiJxBAGg/exec";
+
+function submitScore(){
+  const score = calcScore();
+  const passed = score >= PASS_SCORE;
+
+  // 本考卷無分區：part1Score 填總分、part2Score 留空，以相容原 Apps Script 欄位
+  const s1 = score;
+  const s2 = "";
+
+  const answerLabels = questions.map((_,i)=>{
+    const ans = state.answers[i];
+    if(!ans||ans.length===0) return "未作答";
+    const earned = qPoints(i);
+    const full = questions[i].points;
+    const mark = earned>=full ? " ✓" : (earned>0 ? ` ◐(+${earned})` : " ✗");
+    return ans.map(a=>String.fromCharCode(65+a)).join("、") + mark;
+  });
+
+  const btn = document.getElementById("submit-btn");
+  const msg = document.getElementById("submit-msg");
+  btn.disabled = true;
+  btn.textContent = "提交中…";
+  msg.style.color = "#888780";
+  msg.textContent = "正在傳送資料，請稍候…";
+
+  const displayPosition = state.position === "其他" ? state.positionOther : state.position;
+
+  const payload = {
+    examName: "璧時尚_皮膚生理與病態學_2026",
+    name: state.name,
+    branch: state.branch,
+    position: displayPosition,
+    date: state.date,
+    totalScore: score,
+    passed: passed,
+    part1Score: s1,
+    part2Score: s2,
+    answers: answerLabels
+  };
+
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
+  })
+  .then(()=>{
+    document.getElementById("submit-area").innerHTML =
+      '<div style="background:#EAF3DE;border-radius:8px;padding:14px;text-align:center;font-size:14px;color:#3B6D11;font-weight:500;">'
+      +'✅ 成績已成功提交！已記錄至「' + state.branch + '成績表」。</div>';
+    document.getElementById("retry-area").style.display = "block";
+  })
+  .catch(()=>{
+    btn.disabled = false;
+    btn.textContent = "📤 提交成績到系統";
+    msg.style.color = "#A32D2D";
+    msg.textContent = "⚠ 提交失敗，請確認網路連線後再試。";
+  });
+}
+
+render();
+</script>
+</body>
+</html>
